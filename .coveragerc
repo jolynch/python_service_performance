@@ -1,0 +1,3 @@
+[run]
+source = service
+omit = service/test*
