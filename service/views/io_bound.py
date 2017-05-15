@@ -1,11 +1,13 @@
+import asyncio
 import time
 
 from pyramid.view import view_config
 
 
+@asyncio.coroutine
 def call_service(slowness, call):
     # Pretend this is a HTTP microservice call or something
-    time.sleep(slowness)
+    yield from asyncio.sleep(slowness)
     return call
 
 
@@ -16,9 +18,14 @@ def io_bound(request):
     # Have to do N slow downstream requests
     num_requests = int(request.GET.get('num_requests', 3))
 
-    result = []
+    loop = asyncio.get_event_loop()
+    tasks = []
     for call in range(num_requests):
-        result.append(call_service(time_to_sleep, call))
+        tasks.append(loop.create_task(call_service(time_to_sleep, call)))
+
+    loop.run_until_complete(asyncio.gather(*tasks))
+
+    result = [t.result() for t in tasks]
 
     return {
         'slow service took': '{0}s'.format(time_to_sleep),
