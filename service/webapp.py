@@ -1,4 +1,5 @@
 import time
+import functools
 from pyramid.config import Configurator
 
 
@@ -7,6 +8,7 @@ def add_routes(config):
     config.add_route('index', '/')
 
 
+@functools.lru_cache(maxsize=1)
 def create_application():
     """ This function returns a Pyramid WSGI application.
     """
