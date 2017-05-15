@@ -1,3 +1,4 @@
+import time
 from pyramid.config import Configurator
 
 
@@ -9,6 +10,7 @@ def add_routes(config):
 def create_application():
     """ This function returns a Pyramid WSGI application.
     """
+    time.sleep(1)
     config = Configurator(settings={
         'service_name': 'service'
     })
