@@ -1,31 +1,46 @@
 service
 =======
-
 A demonstration of Python Service performance techniques
 
-Getting Started
----------------
+Note that I construct this demo with git commits, so I will be force pushing
+and rebasing quite a bit. If you want a copy of master I'd suggest forking.
 
-- Change directory into your newly created project.
+Running
+=======
+To give it a try in dev mode run::
 
-    cd service
+    tox -e rundev
+    # separate window
+    curl localhost:1234
 
-- Create a Python virtual environment.
+or to run the "prod" instance::
 
-    python3 -m venv env
+    tox -e runprod
+    # separate window
+    nginx -c "$(pwd)/nginx.cfg"
+    # separate window
+    curl localhost:1234
 
-- Upgrade packaging tools.
 
-    env/bin/pip install --upgrade pip setuptools
+Performance Techniques Covered
+==============================
 
-- Install the project in editable mode with its testing requirements.
+Core techniques for scaling a Python Service
+--------------------------------------------
+These are simple, good architectural choices that will make your Python
+services scale way farther than before.
 
-    env/bin/pip install -e ".[testing]"
+1. Post-fork warming the application to prevent cold workers
+2. Async downstream requests to protect against slow downstreams
+3. Async accept to increase scalability when downstreams get slow
+4. Scaling CPU bound workloads with workers and offloading to mules
+5. Solving mixed IO/CPU work with proper load balancing and NGINX
 
-- Run your project's tests.
+Bonus material
+--------------
+These strategies are more hit or miss, but depending on the workload it can
+help you.
 
-    env/bin/pytest
-
-- Run your project.
-
-    env/bin/pserve development.ini
+1. Disabling GC during the request and enabling it post request
+2. JSON -> msgpack
+2. cythonize the slow CPU bits

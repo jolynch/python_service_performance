@@ -1,0 +1,5 @@
+# Requirements to run the service
+pyramid
+pyramid_jinja2
+pyramid_debugtoolbar
+uwsgi
