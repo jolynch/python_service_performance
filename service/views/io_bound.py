@@ -1,13 +1,12 @@
-import asyncio
+import gevent
 import time
 
 from pyramid.view import view_config
 
 
-@asyncio.coroutine
 def call_service(slowness, call):
     # Pretend this is a HTTP microservice call or something
-    yield from asyncio.sleep(slowness)
+    time.sleep(slowness)
     return call
 
 
@@ -18,14 +17,13 @@ def io_bound(request):
     # Have to do N slow downstream requests
     num_requests = int(request.GET.get('num_requests', 3))
 
-    loop = asyncio.get_event_loop()
     tasks = []
     for call in range(num_requests):
-        tasks.append(loop.create_task(call_service(time_to_sleep, call)))
+        tasks.append(gevent.spawn(call_service, time_to_sleep, call))
 
-    loop.run_until_complete(asyncio.gather(*tasks))
+    gevent.joinall(tasks)
 
-    result = [t.result() for t in tasks]
+    result = [t.value for t in tasks]
 
     return {
         'slow service took': '{0}s'.format(time_to_sleep),

@@ -1,4 +1,5 @@
 # Requirements to run the service
+gevent
 pyramid
 pyramid_jinja2
 pyramid_debugtoolbar

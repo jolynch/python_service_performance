@@ -7,6 +7,10 @@ Anything that is specific to the WSGI server of your choice should be done
 here. If you need to pass something through, pass it through
 create_application.
 """
+# Monkey patch before doing anything at all
+import gevent.monkey
+gevent.monkey.patch_all()
+
 import uwsgidecorators
 import webob
 
