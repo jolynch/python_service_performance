@@ -7,6 +7,7 @@ def add_routes(config):
     """Add in routes to our views"""
     config.add_route('index', '/')
     config.add_route('io', '/io/{slowness}')
+    config.add_route('cpu', '/cpu')
 
 
 @functools.lru_cache(maxsize=1)
