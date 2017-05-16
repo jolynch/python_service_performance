@@ -11,6 +11,7 @@ def add_routes(config):
     config.add_route('io', '/io/{slowness}')
     config.add_route('cpu', '/cpu')
     config.add_route('cpu_offload', '/cpu_offload')
+    config.add_route('mixed', '/mixed/{slowness}')
 
 
 @functools.lru_cache(maxsize=1)
